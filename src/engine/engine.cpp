@@ -89,11 +89,3 @@ void engine::mainLoop() {
 		}
 	}
 }
-
-void engine::tick() {
-	
-}
-
-void engine::render() {
-
-}

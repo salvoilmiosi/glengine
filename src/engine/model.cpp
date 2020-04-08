@@ -30,4 +30,5 @@ model::~model() {
 void model::render() {
     glBindVertexArray(gl_vao);
     glDrawArrays(GL_TRIANGLES, 0, 3);
+    glBindVertexArray(0);
 }

@@ -48,4 +48,4 @@ $(OBJ_DIR)/%.o : $(SRC_DIR)/%.cpp $(OBJ_DIR)/%.d
 $(OBJ_DIR)/%.d: ;
 .PRECIOUS: $(OBJ_DIR)/%.d
 
-include $(wildcard $(patsubst $(SRC_DIR)/%,$(OBJ_DIR)/%.d,$(basename $(SOURCES_EDITOR) $(SOURCES_GAME) $(SOURCES_SHARED))))
+include $(wildcard $(patsubst $(SRC_DIR)/%,$(OBJ_DIR)/%.d,$(basename $(SOURCES))))

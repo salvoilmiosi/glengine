@@ -9,6 +9,40 @@
 #include <ctime>
 
 #include "engine/engine.h"
+#include "engine/shader.h"
+#include "engine/model.h"
+
+const char *vertex_source =
+"#version 330 \n"
+"layout (location = 0) in vec3 position; \n"
+"void main() { \n"
+"   gl_Position = vec4(position, 1.0); \n"
+"} \n";
+const char *fragment_source =
+"#version 330 \n"
+"out vec4 FragColor; \n"
+"uniform vec3 color;"
+"void main() { \n"
+"   FragColor = vec4(color, 1.0); \n"
+"} \n";
+
+glm::vec3 triangle_color = {0.f, 0.f, 1.f};
+
+class game_engine : public engine {
+public:
+    void tick() {
+        triangle_color = {(rand() % 255) / 255.f, (rand() % 255) / 255.f, (rand() % 255) / 255.f};
+    }
+
+    void render() {
+        program->use_program();
+        triangle->render();
+    }
+
+public:
+    model *triangle;
+    shader *program;
+};
 
 int main (int argc, char **argv) {
     srand(time(NULL));
@@ -18,17 +52,24 @@ int main (int argc, char **argv) {
         return -1;
     }
 
-	engine m_engine;
+    try {
+	    game_engine m_engine;
 
-	int err = m_engine.init();
-	if (err != 0) return err;
+        SDL_GL_SetSwapInterval(1);
 
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
+        shader program("triangle", vertex_source, fragment_source);
+        program.add_uniform("color", &triangle_color);
 
-	SDL_GL_SetSwapInterval(1);
+        model triangle;
+        m_engine.triangle = &triangle;
+        m_engine.program = &program;
 
-    m_engine.mainLoop();
+        m_engine.mainLoop();
+    } catch (const std::string &error) {
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", error.c_str(), nullptr);
+        std::cerr << error << std::endl;
+        return -2;
+    }
 
 	SDL_Quit();
 

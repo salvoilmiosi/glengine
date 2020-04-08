@@ -13,8 +13,8 @@ public:
 public:
     void mainLoop();
 
-    void tick();
-    void render();
+    virtual void tick() = 0;
+    virtual void render() = 0;
 
     context *getContext() {
         return &con;

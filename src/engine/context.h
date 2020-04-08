@@ -10,7 +10,7 @@ struct context {
     const char *window_title = "GL engine";
     int window_width = 800;
     int window_height = 600;
-    int tickrate = 60;
+    int tickrate = 5;
 };
 
 #endif // __CONTEXT_H__
