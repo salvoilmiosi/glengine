@@ -11,7 +11,6 @@ public:
     ~engine();
 
 public:
-    int init();
     void mainLoop();
 
     void tick();

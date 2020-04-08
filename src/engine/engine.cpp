@@ -6,26 +6,16 @@
 #include <GL/gl.h>
 
 engine::engine() {
-
-}
-
-engine::~engine() {
-	SDL_DestroyWindow(con.window);
-}
-
-int engine::init() {
     Uint32 winflags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
     con.window = SDL_CreateWindow(con.window_title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, con.window_width, con.window_height, winflags);
 
     if (!con.window) {
-        std::cerr << "Could not create SDL Window: " << SDL_GetError() << std::endl;
-        return -2;
+        throw std::string("Could not create SDL Window: ") + SDL_GetError();
     }
 
     SDL_GLContext glcontext = SDL_GL_CreateContext(con.window);
     if (!glcontext) {
-        std::cerr << "Could not create OpenGL Context: " << SDL_GetError() << std::endl;
-        return -3;
+        throw std::string("Could not create OpenGL Context: ") + SDL_GetError();
     }
     
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -35,11 +25,12 @@ int engine::init() {
 	glewExperimental = true;
 	GLenum error = glewInit();
 	if (error != GLEW_OK) {
-        std::cerr << "Could not init glew: error " << error << std::endl;
-		return -4;
+        throw std::string("Could not init glew: error ") + std::to_string(error);
 	}
+}
 
-    return 0;
+engine::~engine() {
+	SDL_DestroyWindow(con.window);
 }
 
 void engine::mainLoop() {
