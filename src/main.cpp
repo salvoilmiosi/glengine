@@ -10,7 +10,7 @@
 
 #include "engine/engine.h"
 
-#include "triangle.h"
+#include "renderer.h"
 
 int main (int argc, char **argv) {
     srand(time(NULL));
@@ -22,9 +22,9 @@ int main (int argc, char **argv) {
 
     try {
 	    engine m_engine;
-        triangle t;
+        renderer m_renderer(m_engine.getContext());
 
-        m_engine.add_model(&t);
+        m_engine.add_entity(&m_renderer);
         m_engine.mainLoop();
     } catch (const std::string &error) {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", error.c_str(), nullptr);

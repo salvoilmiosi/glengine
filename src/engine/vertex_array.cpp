@@ -30,7 +30,6 @@ vertex_array::vertex_array(draw_mode mode, size_t num_vbos) :
     num_vbos(num_vbos),
     gl_draw_mode(gl_draw_modes[mode])
 {
-    gl_vbo = new GLuint[num_vbos];
     glGenVertexArrays(1, &gl_vao);
     glGenBuffers(num_vbos, gl_vbo);
     glGenBuffers(1, &gl_ebo);
@@ -40,10 +39,9 @@ vertex_array::~vertex_array() {
     glDeleteVertexArrays(1, &gl_vao);
     glDeleteBuffers(num_vbos, gl_vbo);
     glDeleteBuffers(1, &gl_ebo);
-    delete[] gl_vbo;
 }
 
-void vertex_array::update_vertices(size_t vbo_index, const void *data, const size_t size, std::initializer_list<vertex_attrib> attribs, bool dynamic) {
+void vertex_array::update_buffer(size_t vbo_index, const void *data, const size_t size, std::initializer_list<vertex_attrib> attribs, bool dynamic) {
     glBindVertexArray(gl_vao);
     glBindBuffer(GL_ARRAY_BUFFER, gl_vbo[vbo_index]);
     glBufferData(GL_ARRAY_BUFFER, size, data, dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
@@ -65,10 +63,10 @@ void vertex_array::update_vertices(size_t vbo_index, const void *data, const siz
 
 void vertex_array::update_indices(const unsigned int *data, const size_t size, bool dynamic) {
     glBindVertexArray(gl_vao);
-    index_count = size / sizeof(unsigned int);
+    index_count = size;
     
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gl_ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(unsigned int), data, dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
     glBindVertexArray(0);
 }
 

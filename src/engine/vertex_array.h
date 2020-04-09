@@ -32,12 +32,14 @@ struct vertex_attrib {
     attrib_type type;
 };
 
+constexpr size_t MAX_VBOS = 5;
+
 class vertex_array {
 public:
     vertex_array(draw_mode mode, size_t num_vbos = 1);
     ~vertex_array();
 
-    void update_vertices(size_t vbo_index, const void *data, const size_t size, std::initializer_list<vertex_attrib> attribs, bool dynamic = false);
+    void update_buffer(size_t vbo_index, const void *data, const size_t size, std::initializer_list<vertex_attrib> attribs, bool dynamic = false);
     void update_indices(const unsigned int *data, const size_t size, bool dynamic = false);
     void draw();
 
@@ -45,7 +47,7 @@ private:
     const size_t num_vbos;
     
     GLuint gl_vao;
-    GLuint *gl_vbo;
+    GLuint gl_vbo[MAX_VBOS];
     GLuint gl_ebo;
 
     GLenum gl_draw_mode;

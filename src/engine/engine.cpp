@@ -27,6 +27,10 @@ engine::engine() {
 	if (error != GLEW_OK) {
         throw std::string("Could not init glew: error ") + std::to_string(error);
 	}
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 }
 
 engine::~engine() {
@@ -91,14 +95,14 @@ void engine::mainLoop() {
 }
 
 void engine::tick() {
-	for (model *mod : models) {
-		mod->tick();
+	for (entity *ent : entities) {
+		ent->tick(&con);
 	}
 }
 
 void engine::render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	for (model *mod : models) {
-		mod->render();
+	for (entity *ent : entities) {
+		ent->render(&con);
 	}
 }

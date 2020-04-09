@@ -6,7 +6,7 @@
 #include <set>
 
 #include "context.h"
-#include "model.h"
+#include "entity.h"
 
 class engine {
 public:
@@ -23,18 +23,18 @@ public:
         return &con;
     }
 
-    void add_model(model *mod) {
-        models.insert(mod);
+    void add_entity(entity *ent) {
+        entities.insert(ent);
     }
 
-    void remove_model(model *mod) {
-        models.erase(mod);
+    void remove_entity(entity *ent) {
+        entities.erase(ent);
     }
 
 private:
     context con;
 
-    std::set<model *> models;
+    std::set<entity *> entities;
 };
 
 #endif // __ENGINE_H__
