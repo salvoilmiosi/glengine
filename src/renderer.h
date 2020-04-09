@@ -4,6 +4,7 @@
 #include "engine/entity.h"
 #include "engine/shader.h"
 #include "engine/box.h"
+#include "engine/sphere.h"
 #include "engine/context.h"
 
 #include <glm/glm.hpp>
@@ -18,7 +19,7 @@ public:
     void render(context *con);
 
 private:
-    glm::mat4 model_matrix = glm::mat4(1.f);
+    glm::mat4 transform_matrix = glm::mat4(1.f);
     glm::mat4 view_matrix = glm::mat4(1.f);
     glm::mat4 projection_matrix = glm::mat4(1.f);
 
@@ -26,7 +27,7 @@ private:
     glm::vec3 light_direction{-0.5f, 0.5f, 0.5f};
 
     shader program;
-    box p_model;
+    sphere p_model;
 };
 
 #endif // __RENDERER_H__

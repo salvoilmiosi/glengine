@@ -32,12 +32,14 @@ vertex_array::vertex_array(draw_mode mode, size_t num_vbos) :
 {
     glGenVertexArrays(1, &gl_vao);
     glGenBuffers(num_vbos, gl_vbo);
+    glGenBuffers(1, &gl_mat_vbo);
     glGenBuffers(1, &gl_ebo);
 }
 
 vertex_array::~vertex_array() {
     glDeleteVertexArrays(1, &gl_vao);
     glDeleteBuffers(num_vbos, gl_vbo);
+    glDeleteBuffers(1, &gl_mat_vbo);
     glDeleteBuffers(1, &gl_ebo);
 }
 
@@ -70,8 +72,43 @@ void vertex_array::update_indices(const unsigned int *data, const size_t size, b
     glBindVertexArray(0);
 }
 
-void vertex_array::draw() {
+void vertex_array::update_matrices(const glm::mat4 *data, const size_t size, int location, bool dynamic) {
     glBindVertexArray(gl_vao);
-    glDrawElements(gl_draw_mode, index_count, GL_UNSIGNED_INT, (void *)0);
+    matrix_count = size;
+
+    glBindBuffer(GL_ARRAY_BUFFER, gl_mat_vbo);
+    glBufferData(GL_ARRAY_BUFFER, size * sizeof(glm::mat4), data, dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(location);
+    glEnableVertexAttribArray(location + 1);
+    glEnableVertexAttribArray(location + 2);
+    glEnableVertexAttribArray(location + 3);
+
+    glVertexAttribDivisor(location,     1);
+    glVertexAttribDivisor(location + 1, 1);
+    glVertexAttribDivisor(location + 2, 1);
+    glVertexAttribDivisor(location + 3, 1);
+
+    glVertexAttribPointer(location,     4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (void *)0);
+    glVertexAttribPointer(location + 1, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (void *)(sizeof(glm::vec4)));
+    glVertexAttribPointer(location + 2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (void *)(2 * sizeof(glm::vec4)));
+    glVertexAttribPointer(location + 3, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (void *)(3 * sizeof(glm::vec4)));
+
     glBindVertexArray(0);
+}
+
+void vertex_array::draw() {
+    if (index_count > 0) {
+        glBindVertexArray(gl_vao);
+        glDrawElements(gl_draw_mode, index_count, GL_UNSIGNED_INT, (void *)0);
+        glBindVertexArray(0);
+    }
+}
+
+void vertex_array::draw_instanced() {
+    if (matrix_count > 0) {
+        glBindVertexArray(gl_vao);
+        glDrawElementsInstanced(gl_draw_mode, index_count, GL_UNSIGNED_INT, (void *)0, matrix_count);
+        glBindVertexArray(0);
+    }
 }

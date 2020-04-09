@@ -3,6 +3,8 @@
 
 #include <GL/glew.h>
 #include <GL/gl.h>
+#include <glm/glm.hpp>
+
 #include <initializer_list>
 
 enum attrib_type {
@@ -41,18 +43,23 @@ public:
 
     void update_buffer(size_t vbo_index, const void *data, const size_t size, std::initializer_list<vertex_attrib> attribs, bool dynamic = false);
     void update_indices(const unsigned int *data, const size_t size, bool dynamic = false);
+    void update_matrices(const glm::mat4 *data, const size_t size, int location, bool dynamic = false);
+
     void draw();
+    void draw_instanced();
 
 private:
     const size_t num_vbos;
     
     GLuint gl_vao;
     GLuint gl_vbo[MAX_VBOS];
+    GLuint gl_mat_vbo;
     GLuint gl_ebo;
 
     GLenum gl_draw_mode;
 
-    size_t index_count;
+    size_t index_count = 0;
+    size_t matrix_count = 0;
 };
 
 #endif // __VERTEX_ARRAY_H__
