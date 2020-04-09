@@ -3,7 +3,10 @@
 
 #include <SDL2/SDL.h>
 
+#include <set>
+
 #include "context.h"
+#include "model.h"
 
 class engine {
 public:
@@ -13,15 +16,25 @@ public:
 public:
     void mainLoop();
 
-    virtual void tick() = 0;
-    virtual void render() = 0;
+    void tick();
+    void render();
 
     context *getContext() {
         return &con;
     }
 
+    void add_model(model *mod) {
+        models.insert(mod);
+    }
+
+    void remove_model(model *mod) {
+        models.erase(mod);
+    }
+
 private:
     context con;
+
+    std::set<model *> models;
 };
 
 #endif // __ENGINE_H__

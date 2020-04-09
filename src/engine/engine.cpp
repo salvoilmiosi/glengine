@@ -89,3 +89,16 @@ void engine::mainLoop() {
 		}
 	}
 }
+
+void engine::tick() {
+	for (model *mod : models) {
+		mod->tick();
+	}
+}
+
+void engine::render() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	for (model *mod : models) {
+		mod->render();
+	}
+}
